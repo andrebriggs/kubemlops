@@ -21,7 +21,7 @@ jobs:
     # The type of runner that the job will run on
 
     runs-on: ubuntu-latest
-    if: contains(github.event.comment.body, '/build-pipeline') || contains(github.event.comment.body, '/build-images') || github.event_name != 'issue_comment'
+    if: "false"
     outputs:
       event_sha: ${{ env.event_sha }}
     steps:
@@ -37,10 +37,10 @@ jobs:
         run: |
           git fetch origin ${{ env.event_sha }}
           git checkout FETCH_HEAD
-      # - uses: TrueBrain/actions-flake8@master
-      #   if: "true"
-      #   with:
-      #     path: code
+      - uses: TrueBrain/actions-flake8@master
+        if: "true"
+        with:
+          path: code
 
   build_images:
     runs-on: ubuntu-latest
