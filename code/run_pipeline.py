@@ -78,7 +78,7 @@ def main():
     pipeline_params = {}
     pipeline_params["resource_group"] = args.resource_group
     pipeline_params["workspace"] = args.workspace
-    pipeline_params["AzDevOpsCallBackInfo"] = "testcallback"
+    pipeline_params["azdocallbackinfo"] = "testcallback"
     token = get_access_token(args.tenant, args.service_principal, args.sp_secret)  # noqa: E501
     exp = client.get_experiment(experiment_name=args.experiment_name)  # noqa: E501
     client.run_pipeline(exp.id,

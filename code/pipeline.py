@@ -27,7 +27,8 @@ def get_callback_payload(event_type):
 
 def tacosandburritos_train(
     resource_group,
-    workspace
+    workspace,
+    azdocallbackinfo
 ):
     """Pipeline steps"""
 
