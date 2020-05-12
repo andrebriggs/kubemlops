@@ -12,10 +12,10 @@ TRAIN_START_EVENT = "Training Started"
 TRAIN_FINISH_EVENT = "Training Finished"
 
 
-def printparams(rg, wk, callback):
-    print("ResourceGroup" + rg)
-    print("WorkSpace" + wk)
-    print("callback" + callback)
+# def printparams(rg, wk, callback):
+#     print("ResourceGroup" + rg)
+#     print("WorkSpace" + wk)
+#     print("callback" + callback)
 
 
 @dsl.pipeline(
@@ -71,30 +71,30 @@ def tacosandburritos_train(
                               command=['curl'],
                               args=['-d',
                                     get_callback_payload(TRAIN_START_EVENT), callback_url])                                    # noqa: E501
-    paramsop = comp.func_to_container_op(
-        func=printparams,
-        base_image='python:3.7')
+    # paramsop = comp.func_to_container_op(
+    #     func=printparams,
+    #     base_image='python:3.7')
 
-    printparameters = paramsop(resource_group, workspace, azdocallbackinfo)
+    # printparameters = paramsop(resource_group, workspace, azdocallbackinfo)
 
-    # operations['preprocess'] = dsl.ContainerOp(
-    #     name='preprocess',
-    #     init_containers=[start_callback],
-    #     image=image_repo_name + '/preprocess:callback',
-    #     command=['python'],
-    #     arguments=[
-    #         '/scripts/data.py',
-    #         '--base_path', persistent_volume_path,
-    #         '--data', training_folder,
-    #         '--target', training_dataset,
-    #         '--img_size', image_size,
-    #         '--zipfile', data_download,
-    #         '--resource_group', resource_group,
-    #         '--workspace', workspace,
-    #         '--azdocallbackinfo', azdocallbackinfo
+    operations['preprocess'] = dsl.ContainerOp(
+        name='preprocess',
+        init_containers=[start_callback],
+        image=image_repo_name + '/preprocess:callback',
+        command=['python'],
+        arguments=[
+            '/scripts/data.py',
+            '--base_path', persistent_volume_path,
+            '--data', training_folder,
+            '--target', training_dataset,
+            '--img_size', image_size,
+            '--zipfile', data_download,
+            '--resource_group', resource_group,
+            '--workspace', workspace,
+            '--azdocallbackinfo', azdocallbackinfo
 
-    #     ]
-    # )
+        ]
+    )
 
     # # train
     # operations['training'] = dsl.ContainerOp(
