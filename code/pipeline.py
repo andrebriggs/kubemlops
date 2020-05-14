@@ -112,7 +112,7 @@ def tacosandburritos_train(
                                 'mlpipeline-metrics': '/mlpipeline-metrics.json',
                                 'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
                             }
-                            ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url)).add_env_variable(V1EnvVar(name="GIT_PYTHON_REFRESH", value=quiet))  # noqa: E501
+                            ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url)).add_env_variable(V1EnvVar(name="GIT_PYTHON_REFRESH", value='quiet'))  # noqa: E501
 
     exit_op = dsl.ContainerOp(
         name='Exit Handler',
