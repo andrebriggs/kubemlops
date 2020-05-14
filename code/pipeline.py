@@ -93,7 +93,7 @@ def tacosandburritos_train(
 
     def training_op(epochs, learning_rate):
         return dsl.ContainerOp(
-                            name="training with {} epochs".format(epochs),
+                            name="training",
                             image=image_repo_name + '/training:latest',
                             command=['python'],
                             arguments=[
