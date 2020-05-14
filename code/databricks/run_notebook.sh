@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 export DATABRICKS_HOST=https://adb-685183461276593.13.azuredatabricks.net/
 export DATABRICKS_TOKEN=dapi17afa0c5598f1a28731217dd8fc26266
 export CLUSTER_ID=0512-220758-anted64

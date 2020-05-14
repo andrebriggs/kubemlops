@@ -66,7 +66,7 @@ def tacosandburritos_train(
             name='run_on_databricks',
             init_containers=[start_callback],
             image=image_repo_name + '/databricks-notebook:latest',
-            command=['sh'],
+            command=['sh','-c'],
             arguments=[
                 '/scripts/run_notebook.sh',
                 '-r', dsl.RUN_ID_PLACEHOLDER,
