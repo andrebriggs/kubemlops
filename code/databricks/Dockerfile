@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.0.0a0-py3
+FROM python:3.7-slim
 
 # pip install
 RUN pip install databricks-cli && \
@@ -9,4 +9,4 @@ COPY run_config.json /scripts/run_config.json
 COPY run_notebook.sh /scripts/run_notebook.sh
 
 # will be overwritten by kf pipeline
-ENTRYPOINT [ "./scripts/run_notebook.sh" ]
+ENTRYPOINT [ "sh", "-c", "/scripts/run_notebook.sh" ]

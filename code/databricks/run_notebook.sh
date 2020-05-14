@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export DATABRICKS_HOST=https://adb-685183461276593.13.azuredatabricks.net/
 export DATABRICKS_TOKEN=dapi17afa0c5598f1a28731217dd8fc26266
 export CLUSTER_ID=0512-220758-anted64
@@ -5,17 +7,21 @@ export CLUSTER_ID=0512-220758-anted64
 while getopts "r:p:" option;
     do
     case "$option" in
-        r ) RIN_ID=${OPTARG};;
+        r ) RUN_ID=${OPTARG};;
         p ) NOTEBOKK_PARAMETERS=${OPTARG};;
     esac
 done
 
+echo $RUN_ID
+echo $NOTEBOKK_PARAMETERS
+
+cd /scripts
 
 databricks workspace import -o -l PYTHON notebook.py /Shared/$RUN_ID
 
-gsed -i 's/{{CLUSTER_ID}}/'$CLUSTER_ID'/g' run_config.json
-gsed  -i 's/{{NOTEBOOK_PARAMETERS}}/'"$NOTEBOKK_PARAMETERS"'/g' run_config.json
-gsed -i 's/{{NOTEBOOK_NAME}}/'$RUN_ID'/g' run_config.json
+sed -i 's/{{CLUSTER_ID}}/'$CLUSTER_ID'/g' run_config.json
+sed  -i 's/{{NOTEBOOK_PARAMETERS}}/'"$NOTEBOKK_PARAMETERS"'/g' run_config.json
+sed -i 's/{{NOTEBOOK_NAME}}/'$RUN_ID'/g' run_config.json
 
 
 run_id=$(databricks runs submit --json-file run_config.json | jq -r '.run_id')
