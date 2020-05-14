@@ -214,7 +214,7 @@ jobs:
                             --kfp_host $KFP_HOST \
                             --tenant ${{ secrets.tenant }} \
                             --service_principal ${{ secrets.SERVICE_PRINCIPAL }} \
-                            --sp_secret ${{ secrets.SERVICE_PRINCIPAL_PWD }} 2>&1 >/dev/null) \                            
+                            --sp_secret ${{ secrets.SERVICE_PRINCIPAL_PWD }} 2>&1 >/dev/null)                            
         echo "::set-env name=PUBLISHED_PIPELINE_ID::$PIPELINE_ID"
       working-directory: code
 
