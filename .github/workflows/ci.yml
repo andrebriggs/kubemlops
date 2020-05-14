@@ -38,7 +38,7 @@ jobs:
           git fetch origin ${{ env.event_sha }}
           git checkout FETCH_HEAD
       - uses: TrueBrain/actions-flake8@master
-        if: "false"
+        if: "true"
         with:
           path: code
 
