@@ -45,7 +45,7 @@ jobs:
   build_images:
     runs-on: ubuntu-latest
     needs: code_quality_checks
-    if: github.event_name == 'push1' || github.event_name == 'issue_comment'
+    if: github.event_name == 'push12' || github.event_name == 'issue_comment'
     steps:
       - name: Build Databricks Notebook Image
         if: github.event_name == 'push' || contains(github.event.comment.body, '/build-images')
