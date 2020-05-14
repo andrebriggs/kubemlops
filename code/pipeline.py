@@ -63,7 +63,7 @@ def tacosandburritos_train(
                               args=['-d',
                                     get_callback_payload(TRAIN_START_EVENT), callback_url])  # noqa: E501
         operations['run_on_databricks'] = dsl.ContainerOp(
-            name='preprocess',
+            name='run_on_databricks',
             init_containers=[start_callback],
             image=image_repo_name + '/databricks-notebook:latest',
             command=['sh'],
