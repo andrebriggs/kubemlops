@@ -72,12 +72,13 @@ def use_databricks_secret(secret_name='databricks-secret'):
 
 def tacosandburritos_train(
     resource_group,
-    workspace
+    workspace,
+    dataset
 ):
     """Pipeline steps"""
 
     persistent_volume_path = '/mnt/azure'
-    data_download = 'https://aiadvocate.blob.core.windows.net/public/tacodata.zip'  # noqa: E501
+    data_download = dataset  # noqa: E501
     epochs = 2
     batch = 32
     learning_rate = 0.0001
@@ -111,8 +112,7 @@ def tacosandburritos_train(
                                 'mlpipeline-metrics': '/mlpipeline-metrics.json',
                                 'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
                             }
-                            ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url))  # noqa: E501
-
+                            ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url)).add_env_variable(V1EnvVar(name="GIT_PYTHON_REFRESH", value=quiet)  # noqa: E501
 
     exit_op = dsl.ContainerOp(
         name='Exit Handler',
@@ -162,12 +162,17 @@ def tacosandburritos_train(
         # train        
         with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:
             operations['training'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
-            # operations['training_2'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
-            # operations['training_3'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
+
+        operations['evaluate'] = dsl.ContainerOp(
+            name='evaluate',
+            image="busybox",
+            command=['echo Life is Good!']
+        )
+        operations['evaluate'].after(operations['training'])
 
         # register kubeflow artifcats model
-        operations['registerkfartifacts'] = dsl.ContainerOp(
-            name='registerartifacts',
+        operations['register to kubeflow'] = dsl.ContainerOp(
+            name='register to kubeflow',
             image=image_repo_name + '/registerartifacts:latest',
             command=['python'],
             arguments=[
@@ -180,11 +185,11 @@ def tacosandburritos_train(
                 '--run_id', dsl.RUN_ID_PLACEHOLDER
             ]
         ).apply(use_azure_secret())
-        operations['registerkfartifacts'].after(operations['training'])
+        operations['register to kubeflow'].after(operations['evaluate'])
 
         # register model
-        operations['register'] = dsl.ContainerOp(
-            name='register',
+        operations['register to AML'] = dsl.ContainerOp(
+            name='register to AML',
             image=image_repo_name + '/register:latest',
             command=['python'],
             arguments=[
@@ -201,10 +206,10 @@ def tacosandburritos_train(
                 '--run_id', dsl.RUN_ID_PLACEHOLDER
             ]
         ).apply(use_azure_secret())
-        operations['register'].after(operations['registerkfartifacts'])
+        operations['register to AML'].after(operations['register to kubeflow'])
 
         # register model to mlflow
-        operations['register_to_mlflow'] = dsl.ContainerOp(
+        operations['register to mlflow'] = dsl.ContainerOp(
             name='register to mlflow',
             image=image_repo_name + '/register-mlflow:latest',
             command=['python'],
@@ -216,7 +221,7 @@ def tacosandburritos_train(
                 '--run_id', dsl.RUN_ID_PLACEHOLDER
             ]
         ).apply(use_azure_secret()).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url))  # noqa: E501
-        operations['register_to_mlflow'].after(operations['register'])
+        operations['register to mlflow'].after(operations['register to AML'])
 
         operations['finalize'] = dsl.ContainerOp(
             name='Finalize',
@@ -227,7 +232,7 @@ def tacosandburritos_train(
                 callback_url
             ]
         )
-        operations['finalize'].after(operations['register_to_mlflow'])
+        operations['finalize'].after(operations['register to mlflow'])
 
     # operations['deploy'] = dsl.ContainerOp(
     #     name='deploy',
