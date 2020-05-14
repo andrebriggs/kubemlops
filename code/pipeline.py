@@ -255,7 +255,7 @@ def tacosandburritos_train(
             k8s_client.V1Volume(
               name='azure',
               persistent_volume_claim=k8s_client.V1PersistentVolumeClaimVolumeSource(  # noqa: E501
-                claim_name='azure-managed-disk')
+                claim_name='azure-managed-disk-new')
             )
         ).add_volume_mount(k8s_client.V1VolumeMount(
             mount_path='/mnt/azure', name='azure'))
