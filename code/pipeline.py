@@ -162,8 +162,8 @@ def tacosandburritos_train(
         # train        
         with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:
             operations['training_1'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
-            operations['training_2'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
-            operations['training_3'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
+            # operations['training_2'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
+            # operations['training_3'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
 
         # register kubeflow artifcats model
         operations['registerkfartifacts'] = dsl.ContainerOp(
