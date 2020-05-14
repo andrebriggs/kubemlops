@@ -91,6 +91,29 @@ def tacosandburritos_train(
     callback_url = 'kubemlopsbot-svc.kubeflow.svc.cluster.local:8080'
     mlflow_url = 'http://mlflow:5000'
 
+    def training_op(epochs, learning_rate):
+        return dsl.ContainerOp(
+                            name='training with {} epochs and {} learning rate'.format(epochs, learning_rate),
+                            image=image_repo_name + '/training:latest',
+                            command=['python'],
+                            arguments=[
+                                '/scripts/train.py',
+                                '--base_path', persistent_volume_path,
+                                '--data', training_folder,
+                                '--epochs', epochs,
+                                '--batch', batch,
+                                '--image_size', image_size,
+                                '--lr', learning_rate,
+                                '--outputs', model_folder,
+                                '--dataset', training_dataset
+                            ],
+                            output_artifact_paths={    # change output_artifact_paths to file_outputs after this PR is merged https://github.com/kubeflow/pipelines/pull/2334 # noqa: E501
+                                'mlpipeline-metrics': '/mlpipeline-metrics.json',
+                                'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
+                            }
+                            ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url))  # noqa: E501
+
+
     exit_op = dsl.ContainerOp(
         name='Exit Handler',
         image="curlimages/curl",
@@ -108,17 +131,17 @@ def tacosandburritos_train(
                               command=['curl'],
                               args=['-d',
                                     get_callback_payload(TRAIN_START_EVENT), callback_url])  # noqa: E501
-        operations['run_on_databricks'] = dsl.ContainerOp(
-            name='run_on_databricks',
-            init_containers=[start_callback],
-            image=image_repo_name + '/databricks-notebook:latest',
-            command=['bash'],
-            arguments=[
-                '/scripts/run_notebook.sh',
-                '-r', dsl.RUN_ID_PLACEHOLDER,
-                '-p', '{"argument_one":"param one","argument_two":"param two"}'
-            ]
-        ).apply(use_databricks_secret())
+        # operations['run_on_databricks'] = dsl.ContainerOp(
+        #     name='run_on_databricks',
+        #     init_containers=[start_callback],
+        #     image=image_repo_name + '/databricks-notebook:latest',
+        #     command=['bash'],
+        #     arguments=[
+        #         '/scripts/run_notebook.sh',
+        #         '-r', dsl.RUN_ID_PLACEHOLDER,
+        #         '-p', '{"argument_one":"param one","argument_two":"param two"}'
+        #     ]
+        # ).apply(use_databricks_secret())
 
         operations['preprocess'] = dsl.ContainerOp(
             name='preprocess',
@@ -134,30 +157,13 @@ def tacosandburritos_train(
                 '--zipfile', data_download
             ]
         )
-        operations['preprocess'].after(operations['run_on_databricks'])
+        # operations['preprocess'].after(operations['run_on_databricks'])
 
-        # train
-        operations['training'] = dsl.ContainerOp(
-            name='training',
-            image=image_repo_name + '/training:latest',
-            command=['python'],
-            arguments=[
-                '/scripts/train.py',
-                '--base_path', persistent_volume_path,
-                '--data', training_folder,
-                '--epochs', epochs,
-                '--batch', batch,
-                '--image_size', image_size,
-                '--lr', learning_rate,
-                '--outputs', model_folder,
-                '--dataset', training_dataset
-            ],
-            output_artifact_paths={    # change output_artifact_paths to file_outputs after this PR is merged https://github.com/kubeflow/pipelines/pull/2334 # noqa: E501
-                'mlpipeline-metrics': '/mlpipeline-metrics.json',
-                'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
-            }
-        ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url))  # noqa: E501
-        operations['training'].after(operations['preprocess'])
+        # train        
+        with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:
+            operations['training_1'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
+            operations['training_2'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
+            operations['training_3'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
 
         # register kubeflow artifcats model
         operations['registerkfartifacts'] = dsl.ContainerOp(
@@ -174,7 +180,7 @@ def tacosandburritos_train(
                 '--run_id', dsl.RUN_ID_PLACEHOLDER
             ]
         ).apply(use_azure_secret())
-        operations['registerkfartifacts'].after(operations['training'])
+        operations['registerkfartifacts'].after(operations['training_1'], operations['training_2'], operations['training_3'])
 
         # register model
         operations['register'] = dsl.ContainerOp(
