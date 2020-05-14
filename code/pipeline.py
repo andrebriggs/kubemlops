@@ -25,6 +25,7 @@ def get_callback_payload(event_type):
         payload['status'] = '{{workflow.status}}'
     return json.dumps(payload)
 
+
 #  TODO: refactor this. Looks ugly
 def use_databricks_secret(secret_name='databricks-secret'):
     def _use_databricks_secret(task):
@@ -42,7 +43,7 @@ def use_databricks_secret(secret_name='databricks-secret'):
                         )
                     )
                 )
-                .add_env_variable(
+                .add_env_variable(  # noqa: E131
                     k8s_client.V1EnvVar(
                         name='DATABRICKS_TOKEN',
                         value_from=k8s_client.V1EnvVarSource(
@@ -53,7 +54,7 @@ def use_databricks_secret(secret_name='databricks-secret'):
                         )
                     )
                 )
-                .add_env_variable(
+                .add_env_variable(  # noqa: E131
                     k8s_client.V1EnvVar(
                         name='CLUSTER_ID',
                         value_from=k8s_client.V1EnvVarSource(
