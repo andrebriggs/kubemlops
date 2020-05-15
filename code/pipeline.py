@@ -131,55 +131,39 @@ def tacosandburritos_train(
                               command=['curl'],
                               args=['-d',
                                     get_callback_payload(TRAIN_START_EVENT), callback_url])  # noqa: E501
-        # operations['data processing on _databricks'] = dsl.ContainerOp(
-        #     name='data processing on _databricks',
-        #     init_containers=[start_callback],
-        #     image=image_repo_name + '/databricks-notebook:latest',
-        #     command=['bash'],
-        #     arguments=[
-        #         '/scripts/run_notebook.sh',
-        #         '-r', dsl.RUN_ID_PLACEHOLDER,
-        #         '-p', '{"argument_one":"param one","argument_two":"param two"}'
-        #     ]
-        # ).apply(use_databricks_secret())
-
-        # operations['preprocess'] = dsl.ContainerOp(
-        #     name='preprocess',
-        #     init_containers=[start_callback],
-        #     image=image_repo_name + '/preprocess:latest',
-        #     command=['python'],
-        #     arguments=[
-        #         '/scripts/data.py',
-        #         '--base_path', persistent_volume_path,
-        #         '--data', training_folder,
-        #         '--target', training_dataset,
-        #         '--img_size', image_size,
-        #         '--zipfile', data_download
-        #     ]
-        # )
-        operations['preprocess'] = dsl.ContainerOp(
-            name='preprocess',        
-            image='busybox',
-            command=['sh', '-c'],
+        operations['data processing on databricks'] = dsl.ContainerOp(
+            name='data processing on databricks',
+            init_containers=[start_callback],
+            image=image_repo_name + '/databricks-notebook:latest',
+            command=['bash'],
             arguments=[
-                'echo',
-                'Life is Good!'
+                '/scripts/run_notebook.sh',
+                '-r', dsl.RUN_ID_PLACEHOLDER,
+                '-p', '{"argument_one":"param one","argument_two":"param two"}'
+            ]
+        ).apply(use_databricks_secret())
+
+        operations['preprocess'] = dsl.ContainerOp(
+            name='preprocess',
+            init_containers=[start_callback],
+            image=image_repo_name + '/preprocess:latest',
+            command=['python'],
+            arguments=[
+                '/scripts/data.py',
+                '--base_path', persistent_volume_path,
+                '--data', training_folder,
+                '--target', training_dataset,
+                '--img_size', image_size,
+                '--zipfile', data_download
             ]
         )
 
-        # operations['preprocess'].after(operations['data processing on _databricks'])
+        operations['preprocess'].after(operations['data processing on databricks'])
 
         # train        
         with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:
             operations['training'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
-
-        operations['evaluate'] = dsl.ContainerOp(
-            name='evaluate',
-            image="busybox",
-            command=['echo Life is Good!']
-        )
-        operations['evaluate'].after(operations['training'])
-
+        
         # register kubeflow artifcats model
         operations['register to kubeflow'] = dsl.ContainerOp(
             name='register to kubeflow',
@@ -196,6 +180,7 @@ def tacosandburritos_train(
             ]
         ).apply(use_azure_secret())
         operations['register to kubeflow'].after(operations['evaluate'])
+
 
         # register model
         operations['register to AML'] = dsl.ContainerOp(
@@ -232,6 +217,20 @@ def tacosandburritos_train(
             ]
         ).apply(use_azure_secret()).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url))  # noqa: E501
         operations['register to mlflow'].after(operations['register to AML'])
+
+        operations['evaluate'] = dsl.ContainerOp(
+            name='evaluate',
+            image="busybox",
+            command=['sh', '-c'],
+            arguments=[
+                'echo',
+                'Life is Good!'
+            ]
+
+        )        
+        operations['evaluate'].after(operations['training'])
+
+        
 
         operations['finalize'] = dsl.ContainerOp(
             name='Finalize',
