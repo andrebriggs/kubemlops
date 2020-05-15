@@ -33,16 +33,16 @@ stages:
     displayName: "Build and Push Images"
     variables:
       Jobs:
-        Job:
-          steps:
+       -Job:
+        steps:
           - task: Docker@2
             inputs:
-              containerRegistry: 'kubeflow-azdo-sample-acr-sc'
-              repository: 'mexicanfood/databricks-notebook'
-              command: 'buildAndPush'
-              Dockerfile: 'code/databricks/Dockerfile'
-              buildContext: 'code/databricks/'
-              tags: 'azdo'
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+            repository: 'mexicanfood/databricks-notebook'
+            command: 'buildAndPush'
+            Dockerfile: 'code/databricks/Dockerfile'
+            buildContext: 'code/databricks/'
+            tags: 'azdo'
 
   # - stage: "Upload_Pipeline"
   #   displayName: "Upload Pipeline"
