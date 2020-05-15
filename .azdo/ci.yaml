@@ -45,7 +45,7 @@ stages:
             repository: 'mexicanfood/databricks-notebook'
             command: 'buildAndPush'
             Dockerfile: '**/Dockerfile'
-            buildContext: 'code/databricks/'
+            buildContext: 'code/preprocess/'
             tags: 'latest'
 
   # - stage: "Upload_Pipeline"
