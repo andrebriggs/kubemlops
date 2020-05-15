@@ -19,11 +19,11 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: "Model_CI"
-    displayName: "Model CI"
+  - stage: "Code_Quality_Check"
+    displayName: "Code Quality Check"
     jobs:
-      - job: "Model_CI_Pipeline"
-        displayName: "Model CI Pipeline"
+      - job: "Code_Quality_Check"
+        displayName: "Code Quality Check"
         container: mlops
         timeoutInMinutes: 0
         steps:
@@ -47,6 +47,18 @@ stages:
             buildContext: 'code/preprocess/'
             tags: 'latest'
 
+  - stage: "Build_Kubeflow_Pipeline"
+    displayName: 'Build Kubeflow Pipeline'
+    jobs:
+      - job: 
+        steps:
+          - task: PythonScript@0
+            inputs:
+              scriptSource: 'inline'
+              script: |
+                pip3 install kfp adal --upgrade
+                python pipeline.py
+
   - stage: "Upload_Pipeline"
     displayName: "Upload Pipeline"
     variables:
@@ -57,8 +69,8 @@ stages:
         - task: KubeflowUploadPipeline@0
           inputs:
             kubeflowEndpoint: '$(kf_endpoint)'
-            kubeflowPipelineTask: '$(kf_upload_choice)'
-            pipelineFilePath: '$(kf_pipeline_file)'
+            kubeflowPipelineTask: 'uploadNewVersion'
+            pipelineFilePath: '$(KFP_PIPELINE_NAME)'
             existingPipelineName: '$(kf_existing_pipeline)'
             versionName: '$(kf_new_version_name)'
 
