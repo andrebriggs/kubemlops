@@ -143,20 +143,30 @@ def tacosandburritos_train(
         #     ]
         # ).apply(use_databricks_secret())
 
+        # operations['preprocess'] = dsl.ContainerOp(
+        #     name='preprocess',
+        #     init_containers=[start_callback],
+        #     image=image_repo_name + '/preprocess:latest',
+        #     command=['python'],
+        #     arguments=[
+        #         '/scripts/data.py',
+        #         '--base_path', persistent_volume_path,
+        #         '--data', training_folder,
+        #         '--target', training_dataset,
+        #         '--img_size', image_size,
+        #         '--zipfile', data_download
+        #     ]
+        # )
         operations['preprocess'] = dsl.ContainerOp(
-            name='preprocess',
-            init_containers=[start_callback],
-            image=image_repo_name + '/preprocess:latest',
-            command=['python'],
+            name='preprocess',        
+            image='busybox',
+            command=['sh'],
             arguments=[
-                '/scripts/data.py',
-                '--base_path', persistent_volume_path,
-                '--data', training_folder,
-                '--target', training_dataset,
-                '--img_size', image_size,
-                '--zipfile', data_download
+                'echo',
+                'Life is Good!'
             ]
         )
+
         # operations['preprocess'].after(operations['run_on_databricks'])
 
         # train        
