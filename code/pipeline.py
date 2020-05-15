@@ -93,26 +93,7 @@ def tacosandburritos_train(
     mlflow_url = 'http://mlflow:5000'
 
     def training_op(epochs, learning_rate):
-        return dsl.ContainerOp(
-                            name="training",
-                            image=image_repo_name + '/training:latest',
-                            command=['python'],
-                            arguments=[
-                                '/scripts/train.py',
-                                '--base_path', persistent_volume_path,
-                                '--data', training_folder,
-                                '--epochs', epochs,
-                                '--batch', batch,
-                                '--image_size', image_size,
-                                '--lr', learning_rate,
-                                '--outputs', model_folder,
-                                '--dataset', training_dataset
-                            ],
-                            output_artifact_paths={    # change output_artifact_paths to file_outputs after this PR is merged https://github.com/kubeflow/pipelines/pull/2334 # noqa: E501
-                                'mlpipeline-metrics': '/mlpipeline-metrics.json',
-                                'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
-                            }
-                            ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url)).add_env_variable(V1EnvVar(name="GIT_PYTHON_REFRESH", value='quiet'))  # noqa: E501
+        return 
 
     exit_op = dsl.ContainerOp(
         name='Exit Handler',
@@ -162,8 +143,42 @@ def tacosandburritos_train(
 
         # train        
         with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:
-            operations['training'] = training_op(item.epochs, item.lr).after(operations['preprocess'])
-        
+            operations['training'] = dsl.ContainerOp(
+                name="training",
+                image=image_repo_name + '/training:latest',
+                command=['python'],
+                arguments=[
+                    '/scripts/train.py',
+                    '--base_path', persistent_volume_path,
+                    '--data', training_folder,
+                    '--epochs', item.epochs,
+                    '--batch', batch,
+                    '--image_size', image_size,
+                    '--lr', item.lr,
+                    '--outputs', model_folder,
+                    '--dataset', training_dataset
+                ],
+                output_artifact_paths={    # change output_artifact_paths to file_outputs after this PR is merged https://github.com/kubeflow/pipelines/pull/2334 # noqa: E501
+                    'mlpipeline-metrics': '/mlpipeline-metrics.json',
+                    'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
+                }
+                ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url)).add_env_variable(V1EnvVar(name="GIT_PYTHON_REFRESH", value='quiet'))  # noqa: E501
+            
+        operations['training'].after(operations['preprocess'])
+
+        operations['evaluate'] = dsl.ContainerOp(
+            name='evaluate',
+            image="busybox",
+            command=['sh', '-c'],
+            arguments=[
+                'echo',
+                'Life is Good!'
+            ]
+
+        )        
+        operations['evaluate'].after(operations['training'])
+
+                    
         # register kubeflow artifcats model
         operations['register to kubeflow'] = dsl.ContainerOp(
             name='register to kubeflow',
@@ -217,21 +232,7 @@ def tacosandburritos_train(
             ]
         ).apply(use_azure_secret()).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url))  # noqa: E501
         operations['register to mlflow'].after(operations['register to AML'])
-
-        operations['evaluate'] = dsl.ContainerOp(
-            name='evaluate',
-            image="busybox",
-            command=['sh', '-c'],
-            arguments=[
-                'echo',
-                'Life is Good!'
-            ]
-
-        )        
-        operations['evaluate'].after(operations['training'])
-
-        
-
+    
         operations['finalize'] = dsl.ContainerOp(
             name='Finalize',
             image="curlimages/curl",
