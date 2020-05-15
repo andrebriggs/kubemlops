@@ -44,7 +44,7 @@ stages:
             containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/databricks-notebook'
             command: 'buildAndPush'
-            Dockerfile: 'Dockerfile'
+            Dockerfile: '**/Dockerfile'
             buildContext: 'code/databricks/'
             tags: 'latest'
 
