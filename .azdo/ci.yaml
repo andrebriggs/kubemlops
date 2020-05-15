@@ -33,7 +33,7 @@ stages:
     displayName: "Build and Push Images"
     variables:
       Jobs:
-      - Job:
+        Job:
         steps:
           - task: Docker@2
             inputs:
