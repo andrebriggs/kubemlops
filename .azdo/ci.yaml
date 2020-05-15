@@ -29,53 +29,48 @@ stages:
         steps:
           - template: code-quality-template.yml
 
-  - stage: "Build_and_Push_Images"
-    displayName: "Build and Push Images"
-    variables:
-      Jobs:
-        Job:
-        steps:
-        - task: Docker@2
-          displayName: Build and Push
-          inputs:
-            command: buildAndPush
-            containerRegistry: '$(containerRegistry)'
-            repository: '$(imageName)'
-            tags: |
-            ${{format('build-{0}', '$(Build.BuildNumber)')}}
-            ${{format('amlsdk-{0}', '$(amlsdkversion)')}}
-            ${{format('release-{0}', '$(githubrelease)')}}
-            latest
-            buildContext: '$(Build.SourcesDirectory)' 
-            dockerFile: '$(Build.SourcesDirectory)/environment_setup/Dockerfile'
+  # - stage: "Build_and_Push_Images"
+  #   displayName: "Build and Push Images"
+    # variables:
+    # Jobs:
+        # Job:
+    # steps:
+    #   - task: Docker@2
+    #     inputs:
+    #     containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+    #     repository: 'mexicanfood/databricks-notebook'
+    #     command: 'buildAndPush'
+    #     Dockerfile: 'code/databricks/Dockerfile'
+    #     buildContext: 'code/databricks/'
+    #     tags: 'latest'
 
-  - stage: "Upload_Pipeline"
-    displayName: "Upload Pipeline"
-    variables:
-      Jobs:
-        Job:
-        steps:
-        - task: UploadKubeflowPipeline@0
-          inputs:
-            kubeflowEndpoint: '$(kf_endpoint)'
-            kubeflowPipelineTask: '$(kf_upload_choice)'
-            pipelineFilePath: '$(kf_pipeline_file)'
-            existingPipelineName: '$(kf_existing_pipeline)'
-            versionName: '$(kf_new_version_name)'
+  # - stage: "Upload_Pipeline"
+  #   displayName: "Upload Pipeline"
+  #   variables:
+  #     Jobs:
+  #       Job:
+  #       steps:
+  #       - task: UploadKubeflowPipeline@0
+  #         inputs:
+  #           kubeflowEndpoint: '$(kf_endpoint)'
+  #           kubeflowPipelineTask: '$(kf_upload_choice)'
+  #           pipelineFilePath: '$(kf_pipeline_file)'
+  #           existingPipelineName: '$(kf_existing_pipeline)'
+  #           versionName: '$(kf_new_version_name)'
 
-  - stage: "Create_Run"
-    displayName: "Create Run"
-    variables:
-      Jobs:
-        Job:
-        steps:
-        - task: KubeflowExperimentRun@0
-          inputs:
-            kubeflowEndpoint: '$(kf_endpoint)'
-            pipeline: '$(kf_existing_pipeline)'
-            pipelineVersion: '$(kf_version_name)'
-            runName: '$(kf_run_name)'
-            pipelineParams: '$(kf_pipeline_params)'
-            runDescription: '$(kf_run_description)'
-            experiment: '$(kf_experiment_choice)'
-            experimentName: '$(kf_experiment_name)'
+  # - stage: "Create_Run"
+  #   displayName: "Create Run"
+  #   variables:
+  #     Jobs:
+  #       Job:
+  #       steps:
+  #       - task: KubeflowExperimentRun@0
+  #         inputs:
+  #           kubeflowEndpoint: '$(kf_endpoint)'
+  #           pipeline: '$(kf_existing_pipeline)'
+  #           pipelineVersion: '$(kf_version_name)'
+  #           runName: '$(kf_run_name)'
+  #           pipelineParams: '$(kf_pipeline_params)'
+  #           runDescription: '$(kf_run_description)'
+  #           experiment: '$(kf_experiment_choice)'
+  #           experimentName: '$(kf_experiment_name)'
