@@ -35,19 +35,7 @@ stages:
       Jobs:
         Job:
         steps:
-        - task: Docker@2
-          displayName: Build and Push
-          inputs:
-            command: buildAndPush
-            containerRegistry: '$(containerRegistry)'
-            repository: '$(imageName)'
-            tags: |
-            ${{format('build-{0}', '$(Build.BuildNumber)')}}
-            ${{format('amlsdk-{0}', '$(amlsdkversion)')}}
-            ${{format('release-{0}', '$(githubrelease)')}}
-            latest
-            buildContext: '$(Build.SourcesDirectory)' 
-            dockerFile: '$(Build.SourcesDirectory)/environment_setup/Dockerfile'
+        
 
   - stage: "Upload_Pipeline"
     displayName: "Upload Pipeline"
