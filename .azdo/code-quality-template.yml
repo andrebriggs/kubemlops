@@ -1,4 +1,5 @@
 # Pipeline template to run linting, unit tests with code coverage, and publish the results.
+
 steps:
   - script: |
       flake8 --output-file=lint-testresults.xml --format junit-xml

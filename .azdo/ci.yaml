@@ -61,7 +61,7 @@ stages:
             kubeflowPipelineTask: '$(kf_upload_choice)'
             pipelineFilePath: '$(kf_pipeline_file)'
             existingPipelineName: '$(kf_existing_pipeline)'
-            versionName: '$(kf_version_name)'
+            versionName: '$(kf_new_version_name)'
 
   - stage: "Create_Run"
     displayName: "Create Run"
