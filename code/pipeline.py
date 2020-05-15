@@ -112,13 +112,14 @@ def tacosandburritos_train(
                               command=['curl'],
                               args=['-d',
                                     get_callback_payload(TRAIN_START_EVENT), callback_url])  # noqa: E501
+        
         operations['data processing on databricks'] = dsl.ContainerOp(
             name='data processing on databricks',
             init_containers=[start_callback],
             image=image_repo_name + '/databricks-notebook:latest',
-            command=['bash'],
+            # command=['bash'],
             arguments=[
-                '/scripts/run_notebook.sh',
+                # '/scripts/run_notebook.sh',
                 '-r', dsl.RUN_ID_PLACEHOLDER,
                 '-p', '{"argument_one":"param one","argument_two":"param two"}'
             ]
