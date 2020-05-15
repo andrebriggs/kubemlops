@@ -131,8 +131,8 @@ def tacosandburritos_train(
                               command=['curl'],
                               args=['-d',
                                     get_callback_payload(TRAIN_START_EVENT), callback_url])  # noqa: E501
-        # operations['run_on_databricks'] = dsl.ContainerOp(
-        #     name='run_on_databricks',
+        # operations['data processing on _databricks'] = dsl.ContainerOp(
+        #     name='data processing on _databricks',
         #     init_containers=[start_callback],
         #     image=image_repo_name + '/databricks-notebook:latest',
         #     command=['bash'],
@@ -160,14 +160,14 @@ def tacosandburritos_train(
         operations['preprocess'] = dsl.ContainerOp(
             name='preprocess',        
             image='busybox',
-            command=['sh'],
+            command=['sh', '-c'],
             arguments=[
                 'echo',
                 'Life is Good!'
             ]
         )
 
-        # operations['preprocess'].after(operations['run_on_databricks'])
+        # operations['preprocess'].after(operations['data processing on _databricks'])
 
         # train        
         with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:
