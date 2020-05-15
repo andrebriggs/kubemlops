@@ -35,7 +35,6 @@ stages:
 
   - stage: "Build_and_Push_Images"
     displayName: "Build and Push Images"
-    # variables:
     jobs:
       - job:
         steps:
@@ -48,19 +47,20 @@ stages:
             buildContext: 'code/preprocess/'
             tags: 'latest'
 
-  # - stage: "Upload_Pipeline"
-  #   displayName: "Upload Pipeline"
-  #   variables:
-  #     Jobs:
-  #       Job:
-  #       steps:
-  #       - task: UploadKubeflowPipeline@0
-  #         inputs:
-  #           kubeflowEndpoint: '$(kf_endpoint)'
-  #           kubeflowPipelineTask: '$(kf_upload_choice)'
-  #           pipelineFilePath: '$(kf_pipeline_file)'
-  #           existingPipelineName: '$(kf_existing_pipeline)'
-  #           versionName: '$(kf_new_version_name)'
+  - stage: "Upload_Pipeline"
+    displayName: "Upload Pipeline"
+    variables:
+    - group: kubeflow-task-variables
+    jobs:
+      - job:
+        steps:
+        - task: KubeflowUploadPipeline@0
+          inputs:
+            kubeflowEndpoint: '$(kf_endpoint)'
+            kubeflowPipelineTask: '$(kf_upload_choice)'
+            pipelineFilePath: '$(kf_pipeline_file)'
+            existingPipelineName: '$(kf_existing_pipeline)'
+            versionName: '$(kf_new_version_name)'
 
   # - stage: "Create_Run"
   #   displayName: "Create Run"
