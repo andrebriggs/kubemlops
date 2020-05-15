@@ -42,7 +42,7 @@ stages:
             command: 'buildAndPush'
             Dockerfile: 'code/databricks/Dockerfile'
             buildContext: 'code/databricks/'
-            tags: 'azdo'
+            tags: 'latest'
 
   # - stage: "Upload_Pipeline"
   #   displayName: "Upload Pipeline"
