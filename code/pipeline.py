@@ -135,7 +135,7 @@ def tacosandburritos_train(
         operations['preprocess'].after(operations['data processing on databricks'])  # noqa: E501
 
         #  train
-        #  TODO: read set of paramemters from config file        
+        #  TODO: read set of parameters from config file
         with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:  # noqa: E501
             operations['training'] = dsl.ContainerOp(
                 name="training",
