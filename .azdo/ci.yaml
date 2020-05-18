@@ -94,10 +94,12 @@ stages:
           inputs:
             kubeflowEndpoint: '$(kf_endpoint)'
             pipeline: '$(kf_new_pipeline_name)'
+            useDefaultVersion: '$(kf_use_default_version)'
             pipelineVersion: '$(kf_existing_version_name)'
             runName: '$(kf_run_name)'
             pipelineParams: '$(kf_pipeline_params)'
             runDescription: '$(kf_run_description)'
+            waitForRunToFinish: '$(kf_wait_to_complete)'
             experiment: '$(kf_experiment_choice)'
             experimentName: '$(kf_experiment_name)'
           condition: 
@@ -107,10 +109,12 @@ stages:
           inputs:
             kubeflowEndpoint: '$(kf_endpoint)'
             pipeline: '$(kf_existing_pipeline)'
-            pipelineVersion: '$(kf_existing_version_name)'
+            useDefaultVersion: $(kf_use_default_version)
+            pipelineVersion: '$(kf_new_version_name)'
             runName: '$(kf_run_name)'
             pipelineParams: '$(kf_pipeline_params)'
             runDescription: '$(kf_run_description)'
+            waitForRunToFinish: '$(kf_wait_to_complete)'
             experiment: '$(kf_experiment_choice)'
             experimentName: '$(kf_experiment_name)'
           condition: 
