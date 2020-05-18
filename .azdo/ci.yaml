@@ -60,7 +60,6 @@ stages:
           - task: CmdLine@2
             inputs:
               script: |
-                python
                 pip install kfp --upgrade
                 python pipeline.py
           # - task: PythonScript@0
