@@ -33,19 +33,19 @@ stages:
               script: 'echo "this is a placeholder to test the rest of the pipeline"'
           # - template: code-quality-template.yml
 
-  - stage: "Build_and_Push_Images"
-    displayName: "Build and Push Images"
-    jobs:
-      - job:
-        steps:
-        - task: Docker@2
-          inputs:
-            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
-            repository: 'mexicanfood/databricks-notebook'
-            command: 'buildAndPush'
-            Dockerfile: '**/Dockerfile'
-            buildContext: 'code/preprocess/'
-            tags: 'latest'
+  # - stage: "Build_and_Push_Images"
+  #   displayName: "Build and Push Images"
+  #   jobs:
+  #     - job:
+  #       steps:
+  #       - task: Docker@2
+  #         inputs:
+  #           containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+  #           repository: 'mexicanfood/databricks-notebook'
+  #           command: 'buildAndPush'
+  #           Dockerfile: '**/Dockerfile'
+  #           buildContext: 'code/preprocess/'
+  #           tags: 'latest'
 
   - stage: "Build_Kubeflow_Pipeline"
     displayName: 'Build Kubeflow Pipeline'
