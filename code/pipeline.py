@@ -79,9 +79,7 @@ def tacosandburritos_train(
 
     persistent_volume_path = '/mnt/azure'
     data_download = dataset  # noqa: E501
-    epochs = 2
     batch = 32
-    learning_rate = 0.0001
     model_name = 'tacosandburritos'
     operations = {}
     image_size = 160
@@ -136,7 +134,6 @@ def tacosandburritos_train(
                 '--zipfile', data_download
             ]
         )
-        operations['preprocess'].after(operations['run_on_databricks'])
 
         operations['preprocess'].after(operations['data processing on databricks'])
 
