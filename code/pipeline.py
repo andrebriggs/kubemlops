@@ -125,7 +125,7 @@ def tacosandburritos_train(
 
         operations['preprocess'] = dsl.ContainerOp(
             name='preprocess',
-            image=image_repo_name + '/preprocess:latest',
+            image=image_repo_name + '/preprocess:working',
             command=['python'],
             arguments=[
                 '/scripts/data.py',
