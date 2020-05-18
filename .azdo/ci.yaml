@@ -27,11 +27,7 @@ stages:
         container: mlops
         timeoutInMinutes: 0
         steps:
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: 'echo "this is a placeholder to test the rest of the pipeline"'
-          # - template: code-quality-template.yml
+          - template: code-quality-template.yml
 
   - stage: "Build_and_Push_Images"
     displayName: "Build and Push Images"
