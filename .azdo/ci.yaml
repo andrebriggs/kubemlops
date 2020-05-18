@@ -89,20 +89,13 @@ stages:
             pipelineFilePath: '$(kf_pipeline_file)'
             existingPipelineName: '$(kf_existing_pipeline_name)'
             versionName: '$(kf_new_version_name)'
-
-  # - stage: "Create_Run"
-  #   displayName: "Create Run"
-  #   variables:
-  #     Jobs:
-  #       Job:
-  #       steps:
-  #       - task: KubeflowExperimentRun@0
-  #         inputs:
-  #           kubeflowEndpoint: '$(kf_endpoint)'
-  #           pipeline: '$(kf_existing_pipeline)'
-  #           pipelineVersion: '$(kf_version_name)'
-  #           runName: '$(kf_run_name)'
-  #           pipelineParams: '$(kf_pipeline_params)'
-  #           runDescription: '$(kf_run_description)'
-  #           experiment: '$(kf_experiment_choice)'
-  #           experimentName: '$(kf_experiment_name)'
+        - task: KubeflowExperimentRun@0
+          inputs:
+            kubeflowEndpoint: '$(kf_endpoint)'
+            pipeline: '$(kf_existing_pipeline)'
+            pipelineVersion: '$(kf_version_name)'
+            runName: '$(kf_run_name)'
+            pipelineParams: '$(kf_pipeline_params)'
+            runDescription: '$(kf_run_description)'
+            experiment: '$(kf_experiment_choice)'
+            experimentName: '$(kf_experiment_name)'
