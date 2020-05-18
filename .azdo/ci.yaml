@@ -27,7 +27,11 @@ stages:
         container: mlops
         timeoutInMinutes: 0
         steps:
-          - template: code-quality-template.yml
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: 'echo this needs to be deleted'
+          # - template: code-quality-template.yml
 
   - stage: "Build_and_Push_Images"
     displayName: "Build and Push Images"
@@ -41,6 +45,46 @@ stages:
             command: 'buildAndPush'
             Dockerfile: '**/Dockerfile'
             buildContext: 'code/preprocess/'
+            tags: 'latest'
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+            repository: 'mexicanfood/databricks-notebook'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            buildContext: 'code/register-artifacts/'
+            tags: 'latest'
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+            repository: 'mexicanfood/databricks-notebook'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            buildContext: 'code/register-mlflow/'
+            tags: 'latest'
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+            repository: 'mexicanfood/databricks-notebook'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            buildContext: 'code/register/'
+            tags: 'latest'
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+            repository: 'mexicanfood/databricks-notebook'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            buildContext: 'code/training/'
+            tags: 'latest'
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+            repository: 'mexicanfood/databricks-notebook'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            buildContext: 'code/databricks/'
             tags: 'latest'
 
   - stage: "Build_Upload_Run_Kubeflow_Pipeline"
