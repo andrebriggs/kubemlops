@@ -136,6 +136,7 @@ def tacosandburritos_train(
                 '--zipfile', data_download
             ]
         )
+        operations['preprocess'].after(operations['run_on_databricks'])
 
         operations['preprocess'].after(operations['data processing on databricks'])
 
