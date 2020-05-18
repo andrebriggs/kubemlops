@@ -60,7 +60,9 @@ stages:
           - task: Bash@3
             inputs:
               targetType: 'inline'
-              script: 'pip3 install kfp adal --upgrade'
+              script: |
+                'pip3 install kfp adal --upgrade'
+                'python pipeline.py'
 
   - stage: "Upload_Pipeline"
     displayName: "Upload Pipeline"
@@ -73,7 +75,7 @@ stages:
           inputs:
             kubeflowEndpoint: '$(kf_endpoint)'
             kubeflowPipelineTask: 'uploadNewVersion'
-            pipelineFilePath: '$(KFP_PIPELINE_NAME)'
+            pipelineFilePath: '**/pipeline.py.tar.gz'
             existingPipelineName: '$(kf_existing_pipeline)'
             versionName: '$(kf_new_version_name)'
 
