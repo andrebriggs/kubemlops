@@ -48,7 +48,7 @@ stages:
             tags: 'latest'
 
   - stage: "Build_Kubeflow_Pipeline"
-    displayName: 'Build Kubeflow Pipeline'
+    displayName: 'Build Upload and Run Kubeflow Pipeline'
     variables:
     - group: kubeflow-task-variables
     jobs:
