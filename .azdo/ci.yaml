@@ -61,7 +61,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                'pip3 install kfp --upgrade'
+                'pip install kfp --upgrade'
                 'python pipeline.py'
 
   - stage: "Upload_Pipeline"
