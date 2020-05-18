@@ -57,12 +57,18 @@ stages:
               versionSpec: '3.7'
               addToPath: true
               architecture: 'x64'
-          - task: PythonScript@0
+          - task: CmdLine@2
             inputs:
-              scriptSource: 'inline'
               script: |
+                python
                 pip install kfp --upgrade
                 python pipeline.py
+          # - task: PythonScript@0
+          #   inputs:
+          #     scriptSource: 'inline'
+          #     script: |
+          #       pip install kfp --upgrade
+          #       python pipeline.py
           # - task: Bash@3
           #   inputs:
           #     targetType: 'inline'
