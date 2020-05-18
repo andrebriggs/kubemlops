@@ -61,6 +61,7 @@ stages:
             inputs:
               script: |
                 pip install kfp --upgrade
+                cd code
                 python pipeline.py
           # - task: PythonScript@0
           #   inputs:
