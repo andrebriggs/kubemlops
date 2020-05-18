@@ -90,9 +90,6 @@ def tacosandburritos_train(
     callback_url = 'kubemlopsbot-svc.kubeflow.svc.cluster.local:8080'
     mlflow_url = 'http://mlflow:5000'
 
-    def training_op(epochs, learning_rate):
-        return 
-
     exit_op = dsl.ContainerOp(
         name='Exit Handler',
         image="curlimages/curl",
