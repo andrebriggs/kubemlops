@@ -65,23 +65,14 @@ stages:
               pip install kfp --upgrade
               cd code
               python pipeline.py
-              dir
-
-  # - stage: "Upload_Pipeline"
-  #   displayName: "Upload Pipeline"
-  #   variables:
-  #   - group: kubeflow-task-variables
-  #   jobs:
-  #     - job:
-        # steps:
-        - task: Bash@3
-          inputs:
-            targetType: 'inline'
-            script: |
-              ls
-              echo '------------------------------------------'
-              cd code
-              ls
+        # - task: Bash@3
+        #   inputs:
+        #     targetType: 'inline'
+        #     script: |
+        #       ls
+        #       echo '------------------------------------------'
+        #       cd code
+        #       ls
         - task: KubeflowUploadPipeline@0
           inputs:
             kubeflowEndpoint: '$(kf_endpoint)'
@@ -108,7 +99,7 @@ stages:
         - task: KubeflowExperimentRun@0
           inputs:
             kubeflowEndpoint: '$(kf_endpoint)'
-            pipeline: '$(kf_existing_pipeline)'
+            pipeline: '$(kf_existing_pipeline_name)'
             useDefaultVersion: $(kf_use_default_version)
             pipelineVersion: '$(kf_new_version_name)'
             runName: '$(kf_run_name)'
