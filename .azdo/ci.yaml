@@ -57,10 +57,10 @@ stages:
               versionSpec: '3.7'
               addToPath: true
               architecture: 'x64'
-          - task: PythonScript@0
+          - task: Bash@3
             inputs:
-              scriptSource: 'inline'
-              script: 'pip3 install kfp --upgrade'
+              targetType: 'inline'
+              script: 'pip3 install kfp adal --upgrade'
 
   - stage: "Upload_Pipeline"
     displayName: "Upload Pipeline"
