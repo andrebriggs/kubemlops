@@ -86,7 +86,7 @@ stages:
             kubeflowEndpoint: '$(kf_endpoint)'
             pipeline: '$(kf_new_pipeline_name)'
             useDefaultVersion: '$(kf_use_default_version)'
-            pipelineVersion: '$(kf_existing_version_name)'
+            pipelineVersion: '$(kf_new_pipeline_name)'
             runName: '$(kf_run_name)'
             pipelineParams: '$(kf_pipeline_params)'
             runDescription: '$(kf_run_description)'
