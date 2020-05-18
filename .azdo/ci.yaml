@@ -47,7 +47,7 @@ stages:
             buildContext: 'code/preprocess/'
             tags: 'latest'
 
-  - stage: "Build_Kubeflow_Pipeline"
+  - stage: "Build_Upload_Run_Kubeflow_Pipeline"
     displayName: 'Build Upload and Run Kubeflow Pipeline'
     variables:
     - group: kubeflow-task-variables
