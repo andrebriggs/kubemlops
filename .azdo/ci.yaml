@@ -63,7 +63,7 @@ stages:
                 pip install kfp --upgrade
                 cd code
                 python pipeline.py
-                ls
+                dir
           # - task: PythonScript@0
           #   inputs:
           #     scriptSource: 'inline'
