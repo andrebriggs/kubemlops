@@ -107,7 +107,7 @@ def tacosandburritos_train(
                               command=['curl'],
                               args=['-d',
                                     get_callback_payload(TRAIN_START_EVENT), callback_url])  # noqa: E501
-        
+
         operations['data processing on databricks'] = dsl.ContainerOp(
             name='data processing on databricks',
             init_containers=[start_callback],
@@ -132,10 +132,10 @@ def tacosandburritos_train(
             ]
         )
 
-        operations['preprocess'].after(operations['data processing on databricks'])
+        operations['preprocess'].after(operations['data processing on databricks'])  # noqa: E501
 
-        # train        
-        with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:
+        # train
+        with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:  # noqa: E501
             operations['training'] = dsl.ContainerOp(
                 name="training",
                 image=image_repo_name + '/training:latest',
@@ -156,7 +156,7 @@ def tacosandburritos_train(
                     'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
                 }
                 ).add_env_variable(V1EnvVar(name="RUN_ID", value=dsl.RUN_ID_PLACEHOLDER)).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url)).add_env_variable(V1EnvVar(name="GIT_PYTHON_REFRESH", value='quiet'))  # noqa: E501
-            
+
         operations['training'].after(operations['preprocess'])
 
         operations['evaluate'] = dsl.ContainerOp(
@@ -168,10 +168,9 @@ def tacosandburritos_train(
                 'Life is Good!'
             ]
 
-        )        
+        )
         operations['evaluate'].after(operations['training'])
 
-                    
         # register kubeflow artifcats model
         operations['register to kubeflow'] = dsl.ContainerOp(
             name='register to kubeflow',
@@ -188,7 +187,6 @@ def tacosandburritos_train(
             ]
         ).apply(use_azure_secret())
         operations['register to kubeflow'].after(operations['evaluate'])
-
 
         # register model
         operations['register to AML'] = dsl.ContainerOp(
@@ -225,7 +223,7 @@ def tacosandburritos_train(
             ]
         ).apply(use_azure_secret()).add_env_variable(V1EnvVar(name="MLFLOW_TRACKING_URI", value=mlflow_url))  # noqa: E501
         operations['register to mlflow'].after(operations['register to AML'])
-    
+
         operations['finalize'] = dsl.ContainerOp(
             name='Finalize',
             image="curlimages/curl",
