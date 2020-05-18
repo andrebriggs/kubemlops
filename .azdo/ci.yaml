@@ -87,7 +87,7 @@ stages:
             kubeflowEndpoint: '$(kf_endpoint)'
             kubeflowPipelineTask: 'uploadNewVersion'
             pipelineFilePath: 'code/pipeline.py.tar.gz'
-            existingPipelineName: '$(kf_existing_pipeline)'
+            existingPipelineName: '$(kf_existing_pipeline_name)'
             versionName: '$(kf_new_version_name)'
 
   # - stage: "Create_Run"
