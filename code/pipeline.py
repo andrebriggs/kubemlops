@@ -116,7 +116,7 @@ def tacosandburritos_train(
         operations['data processing on databricks'] = dsl.ContainerOp(
             name='data processing on databricks',
             init_containers=[start_callback],
-            image=image_repo_name + '/databricks-notebook:latest',
+            image=image_repo_name + '/databricks-notebook:working',
             arguments=[
                 '-r', dsl.RUN_ID_PLACEHOLDER,
                 '-p', '{"argument_one":"param one","argument_two":"param two"}'
@@ -125,7 +125,7 @@ def tacosandburritos_train(
 
         operations['preprocess'] = dsl.ContainerOp(
             name='preprocess',
-            image=image_repo_name + '/preprocess:working',
+            image=image_repo_name + '/preprocess:latest',
             command=['python'],
             arguments=[
                 '/scripts/data.py',
