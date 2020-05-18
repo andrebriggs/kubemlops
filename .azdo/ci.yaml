@@ -49,46 +49,37 @@ stages:
 
   - stage: "Build_Kubeflow_Pipeline"
     displayName: 'Build Kubeflow Pipeline'
-    jobs:
-      - job: 
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.7'
-              addToPath: true
-              architecture: 'x64'
-          - task: CmdLine@2
-            inputs:
-              script: |
-                pip install kfp --upgrade
-                cd code
-                python pipeline.py
-                dir
-          # - task: PythonScript@0
-          #   inputs:
-          #     scriptSource: 'inline'
-          #     script: |
-          #       pip install kfp --upgrade
-          #       python pipeline.py
-          # - task: Bash@3
-          #   inputs:
-          #     targetType: 'inline'
-          #     script: |
-          #       'pip install kfp --upgrade'
-          #       'python pipeline.py'
-
-  - stage: "Upload_Pipeline"
-    displayName: "Upload Pipeline"
     variables:
     - group: kubeflow-task-variables
     jobs:
-      - job:
+      - job: 
         steps:
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: '3.7'
+            addToPath: true
+            architecture: 'x64'
+        - task: CmdLine@2
+          inputs:
+            script: |
+              pip install kfp --upgrade
+              cd code
+              python pipeline.py
+              dir
+
+  # - stage: "Upload_Pipeline"
+  #   displayName: "Upload Pipeline"
+  #   variables:
+  #   - group: kubeflow-task-variables
+  #   jobs:
+  #     - job:
+        # steps:
         - task: Bash@3
           inputs:
             targetType: 'inline'
             script: |
               ls
+              echo '------------------------------------------'
               cd code
               ls
         - task: KubeflowUploadPipeline@0
