@@ -40,7 +40,7 @@ stages:
         steps:
         - task: Docker@2
           inputs:
-            containerRegistry: 'kubeflowyoacr'
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/preprocess'
             command: 'buildAndPush'
             Dockerfile: '**/Dockerfile'
@@ -56,7 +56,7 @@ stages:
         #     tags: 'latest'
         - task: Docker@2
           inputs:
-            containerRegistry: 'kubeflowyoacr'
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/register-mlflow'
             command: 'buildAndPush'
             Dockerfile: '**/Dockerfile'
@@ -64,7 +64,7 @@ stages:
             tags: 'latest'
         - task: Docker@2
           inputs:
-            containerRegistry: 'kubeflowyoacr'
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/register'
             command: 'buildAndPush'
             Dockerfile: '**/Dockerfile'
@@ -72,7 +72,7 @@ stages:
             tags: 'latest'
         - task: Docker@2
           inputs:
-            containerRegistry: 'kubeflowyoacr'
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/training'
             command: 'buildAndPush'
             Dockerfile: '**/Dockerfile'
@@ -80,7 +80,7 @@ stages:
             tags: 'latest'
         - task: Docker@2
           inputs:
-            containerRegistry: 'kubeflowyoacr'
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/databricks-notebook'
             command: 'buildAndPush'
             Dockerfile: '**/Dockerfile'
