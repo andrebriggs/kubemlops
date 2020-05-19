@@ -70,14 +70,14 @@ stages:
         #     Dockerfile: '**/Dockerfile'
         #     buildContext: 'code/register/'
         #     tags: 'latest'
-        - task: Docker@2
-          inputs:
-            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
-            repository: 'mexicanfood/training'
-            command: 'buildAndPush'
-            Dockerfile: '**/Dockerfile'
-            buildContext: 'code/training/'
-            tags: 'latest'
+        # - task: Docker@2
+        #   inputs:
+        #     containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+        #     repository: 'mexicanfood/training'
+        #     command: 'buildAndPush'
+        #     Dockerfile: '**/Dockerfile'
+        #     buildContext: 'code/training/'
+        #     tags: 'latest'
         - task: Docker@2
           inputs:
             containerRegistry: 'kubeflow-azdo-sample-acr-sc'
