@@ -54,14 +54,14 @@ stages:
         #     Dockerfile: '**/Dockerfile'
         #     buildContext: 'code/register-artifacts/'
         #     tags: 'latest'
-        - task: Docker@2
-          inputs:
-            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
-            repository: 'mexicanfood/register-mlflow'
-            command: 'buildAndPush'
-            Dockerfile: '**/Dockerfile'
-            buildContext: 'code/register-mlflow/'
-            tags: 'latest'
+        # - task: Docker@2
+        #   inputs:
+        #     containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+        #     repository: 'mexicanfood/register-mlflow'
+        #     command: 'buildAndPush'
+        #     Dockerfile: '**/Dockerfile'
+        #     buildContext: 'code/register-mlflow/'
+        #     tags: 'latest'
         - task: Docker@2
           inputs:
             containerRegistry: 'kubeflow-azdo-sample-acr-sc'
