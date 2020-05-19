@@ -19,34 +19,25 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  # - stage: "Code_Quality_Check"
-  #   displayName: "Code Quality Check"
-  #   jobs:
-  #     - job: "Code_Quality_Check"
-  #       displayName: "Code Quality Check"
-  #       container: mlops
-  #       timeoutInMinutes: 0
-  #       steps:
-  #         - task: Bash@3
-  #           inputs:
-  #             targetType: 'inline'
-  #             script: 'echo this needs to be deleted'
-  #         # - template: code-quality-template.yml
+  - stage: "Code_Quality_Check"
+    displayName: "Code Quality Check"
+    jobs:
+      - job: "Code_Quality_Check"
+        displayName: "Code Quality Check"
+        container: mlops
+        timeoutInMinutes: 0
+        steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: 'echo this needs to be deleted'
+          # - template: code-quality-template.yml
 
   - stage: "Build_and_Push_Images"
     displayName: "Build and Push Images"
     jobs:
       - job:
         steps:
-        - task: Docker@2
-          displayName: Databricks
-          inputs:
-            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
-            repository: 'mexicanfood/databricks-notebook'
-            command: 'buildAndPush'
-            Dockerfile: 'code/databricks/Dockerfile'
-            buildContext: 'code/databricks/'
-            tags: 'latest'
         - task: Docker@2
           displayName: Preprocess
           inputs:
@@ -92,6 +83,15 @@ stages:
             Dockerfile: 'code/training/Dockerfile'
             buildContext: 'code/training/'
             tags: 'latest'
+        # - task: Docker@2
+        #   displayName: Databricks
+        #   inputs:
+        #     containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+        #     repository: 'mexicanfood/databricks-notebook'
+        #     command: 'buildAndPush'
+        #     Dockerfile: 'code/databricks/Dockerfile'
+        #     buildContext: 'code/databricks/'
+        #     tags: 'latest'
 
   - stage: "Build_Upload_Run_Kubeflow_Pipeline"
     displayName: 'Build Upload and Run Kubeflow Pipeline'
