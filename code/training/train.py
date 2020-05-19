@@ -90,7 +90,9 @@ def run(
     train_data, train_labels = zip(*train)
     train_ds = Dataset.zip((Dataset.from_tensor_slices(list(train_data)),
                             Dataset.from_tensor_slices(list(train_labels)),
-                            Dataset.from_tensor_slices([img_size]*len(train_data))))  # noqa: E501
+                            img_size
+                            # Dataset.from_tensor_slices([img_size]*len(train_data))
+                            ))  # noqa: E501
 
     print(train_ds)
     train_ds = train_ds.map(map_func=process_image,
