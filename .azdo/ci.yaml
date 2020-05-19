@@ -78,14 +78,14 @@ stages:
         #     Dockerfile: '**/Dockerfile'
         #     buildContext: 'code/training/'
         #     tags: 'latest'
-        - task: Docker@2
-          inputs:
-            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
-            repository: 'mexicanfood/databricks-notebook'
-            command: 'buildAndPush'
-            Dockerfile: '**/Dockerfile'
-            buildContext: 'code/databricks/'
-            tags: 'latest'
+        # - task: Docker@2
+        #   inputs:
+        #     containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+        #     repository: 'mexicanfood/databricks-notebook'
+        #     command: 'buildAndPush'
+        #     Dockerfile: '**/Dockerfile'
+        #     buildContext: 'code/databricks/'
+        #     tags: 'latest'
 
   - stage: "Build_Upload_Run_Kubeflow_Pipeline"
     displayName: 'Build Upload and Run Kubeflow Pipeline'
