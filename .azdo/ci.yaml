@@ -27,19 +27,15 @@ stages:
         container: mlops
         timeoutInMinutes: 0
         steps:
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: 'echo this needs to be deleted'
-          # - template: code-quality-template.yml
+          - template: code-quality-template.yml
 
-  - stage: "Build_and_Push_Images"
-    displayName: "Build and Push Images"
+  - stage: "Build_and_Push_KF_Component_Images"
+    displayName: "Build and Push KF Component Images"
     jobs:
       - job:
         steps:
         - task: Docker@2
-          displayName: Preprocess
+          displayName: Build and Push Preprocess
           inputs:
             containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/preprocess'
@@ -48,7 +44,7 @@ stages:
             buildContext: 'code/preprocess/'
             tags: 'latest'
         - task: Docker@2
-          displayName: Register Artifacts
+          displayName: Build and Push Register Artifacts
           inputs:
             containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/registerartifacts'
@@ -57,7 +53,7 @@ stages:
             buildContext: 'code/register-artifacts/'
             tags: 'latest'
         - task: Docker@2
-          displayName: Register MLFlow
+          displayName: Build and Push Register MLFlow
           inputs:
             containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/register-mlflow'
@@ -66,7 +62,7 @@ stages:
             buildContext: 'code/register-mlflow/'
             tags: 'latest'
         - task: Docker@2
-          displayName: Register
+          displayName: Build and Push Register
           inputs:
             containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/register'
@@ -75,7 +71,7 @@ stages:
             buildContext: 'code/register/'
             tags: 'latest'
         - task: Docker@2
-          displayName: Training
+          displayName: Build and Push Training
           inputs:
             containerRegistry: 'kubeflow-azdo-sample-acr-sc'
             repository: 'mexicanfood/training'
@@ -83,18 +79,18 @@ stages:
             Dockerfile: 'code/training/Dockerfile'
             buildContext: 'code/training/'
             tags: 'latest'
-        # - task: Docker@2
-        #   displayName: Databricks
-        #   inputs:
-        #     containerRegistry: 'kubeflow-azdo-sample-acr-sc'
-        #     repository: 'mexicanfood/databricks-notebook'
-        #     command: 'buildAndPush'
-        #     Dockerfile: 'code/databricks/Dockerfile'
-        #     buildContext: 'code/databricks/'
-        #     tags: 'latest'
+        - task: Docker@2
+          displayName: Build and Push Databricks
+          inputs:
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+            repository: 'mexicanfood/databricks-notebook'
+            command: 'buildAndPush'
+            Dockerfile: 'code/databricks/Dockerfile'
+            buildContext: 'code/databricks/'
+            tags: 'latest'
 
   - stage: "Build_Upload_Run_Kubeflow_Pipeline"
-    displayName: 'Build Upload and Run Kubeflow Pipeline'
+    displayName: 'Build, Upload, and Run Kubeflow Pipeline'
     variables:
     - group: kubeflow-task-variables
     jobs:
