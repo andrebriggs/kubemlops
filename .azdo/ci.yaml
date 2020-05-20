@@ -113,7 +113,7 @@ stages:
         - task: KubeflowUploadPipeline@0
           inputs:
             kubeflowEndpoint: '$(KF_ENDPOINT)'
-            bearerToken: $(KF_API_TOKEN)
+            bearerToken: '$(KF_API_TOKEN)'
             kubeflowPipelineTask: '$(KF_UPLOAD_CHOICE)'
             pipelineFilePath: '$(KF_PIPELINE_FILE)'
             newPipelineName: '$(KF_NEW_PIPELINE_NAME)'
