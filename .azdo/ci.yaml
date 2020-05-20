@@ -98,7 +98,7 @@ stages:
     variables:
     - group: kubeflow-task-variables
     - name: 'API_TOKEN'
-      value: '${KF_API_TOKEN}'
+      value: ${KF_API_TOKEN}
     jobs:
       - job: 
         steps:
