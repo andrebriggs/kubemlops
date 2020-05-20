@@ -145,7 +145,7 @@ def tacosandburritos_train(
                 '/scripts/train.py',
                 '--base_path', persistent_volume_path,
                 '--data', training_folder,
-                '--epochs', 4,
+                '--epochs', 5,
                 '--batch', batch,
                 '--image_size', image_size,
                 '--lr', 0.0001,

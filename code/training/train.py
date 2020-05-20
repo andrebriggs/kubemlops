@@ -46,7 +46,7 @@ def load_dataset(base_path, dset, split=None):
     labels = {}
     for (_, dirs, _) in os.walk(base_path):
         print('found {}'.format(dirs))
-        labels = {k: v for (k, v) in enumerate(dirs)}
+        labels = {k: v for (v, k) in enumerate(dirs)}
         print('using {}'.format(labels))
         break
 
