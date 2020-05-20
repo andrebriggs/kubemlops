@@ -27,11 +27,7 @@ stages:
         container: mlops
         timeoutInMinutes: 0
         steps:
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: 'echo ''Hello world'''
-          # - template: code-quality-template.yml
+          - template: code-quality-template.yml
 
   - stage: "Build_and_Push_KF_Component_Images"
     displayName: "Build and Push KF Component Images"
@@ -83,22 +79,20 @@ stages:
             Dockerfile: 'code/training/Dockerfile'
             buildContext: 'code/training/'
             tags: 'latest'
-        # - task: Docker@2
-        #   displayName: Build and Push Databricks
-        #   inputs:
-        #     containerRegistry: 'kubeflow-azdo-sample-acr-sc'
-        #     repository: 'mexicanfood/databricks-notebook'
-        #     command: 'buildAndPush'
-        #     Dockerfile: 'code/databricks/Dockerfile'
-        #     buildContext: 'code/databricks/'
-        #     tags: 'latest'
+        - task: Docker@2
+          displayName: Build and Push Databricks
+          inputs:
+            containerRegistry: 'kubeflow-azdo-sample-acr-sc'
+            repository: 'mexicanfood/databricks-notebook'
+            command: 'buildAndPush'
+            Dockerfile: 'code/databricks/Dockerfile'
+            buildContext: 'code/databricks/'
+            tags: 'latest'
 
   - stage: "Build_Upload_Run_Kubeflow_Pipeline"
     displayName: 'Build, Upload, and Run Kubeflow Pipeline'
     variables:
     - group: kubeflow-task-variables
-    # - name: 'API_TOKEN'
-    #   value: ${KF_API_TOKEN}
     jobs:
       - job: 
         steps:
