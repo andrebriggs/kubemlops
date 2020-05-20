@@ -46,7 +46,7 @@ def load_dataset(base_path, dset, split=None):
     labels = {}
     for (_, dirs, _) in os.walk(base_path):
         print('found {}'.format(dirs))
-        labels = {k: v for (v, k) in enumerate(dirs)}
+        labels = {k: v for (k, v) in enumerate(dirs)}
         print('using {}'.format(labels))
         break
 
@@ -55,8 +55,8 @@ def load_dataset(base_path, dset, split=None):
     with open(dset, 'r') as d:
         data = [(str(Path(line.strip()).absolute()),
                  labels[Path(line.strip()).parent.name]) for line in d.readlines()]  # noqa: E501
-        print(str(Path(line.strip()).absolute()))
-        print(labels[Path(line.strip()).parent.name])
+        # print(str(Path(line.strip()).absolute()))
+        # print(labels[Path(line.strip()).parent.name])
 
     print('dataset size: {}\nsuffling data...'.format(len(data)))
 
