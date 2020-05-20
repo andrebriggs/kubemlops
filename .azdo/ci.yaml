@@ -97,8 +97,8 @@ stages:
     displayName: 'Build, Upload, and Run Kubeflow Pipeline'
     variables:
     - group: kubeflow-task-variables
-    - name: API_TOKEN
-      value: ${KF_API_TOKEN}
+    - name: 'API_TOKEN'
+      value: '${KF_API_TOKEN}'
     jobs:
       - job: 
         steps:
