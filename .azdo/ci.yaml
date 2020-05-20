@@ -97,6 +97,8 @@ stages:
     displayName: 'Build, Upload, and Run Kubeflow Pipeline'
     variables:
     - group: kubeflow-task-variables
+    - name: API_TOKEN
+      value: ${KF_API_TOKEN}
     jobs:
       - job: 
         steps:
@@ -113,7 +115,7 @@ stages:
         - task: KubeflowUploadPipeline@0
           inputs:
             kubeflowEndpoint: '$(KF_ENDPOINT)'
-            bearerToken: '$(KF_API_TOKEN)'
+            bearerToken: '$(API_TOKEN)'
             kubeflowPipelineTask: '$(KF_UPLOAD_CHOICE)'
             pipelineFilePath: '$(KF_PIPELINE_FILE)'
             newPipelineName: '$(KF_NEW_PIPELINE_NAME)'
@@ -122,7 +124,7 @@ stages:
         - task: KubeflowExperimentRun@0
           inputs:
             kubeflowEndpoint: '$(KF_ENDPOINT)'
-            bearerToken: '$(KF_API_TOKEN)'
+            bearerToken: '$(API_TOKEN)'
             pipeline: '$(KF_NEW_PIPELINE_NAME)'
             useDefaultVersion: '$(KF_USE_DEFAULT_VERSION)'
             pipelineVersion: '$(KF_NEW_PIPELINE_NAME)'
@@ -138,7 +140,7 @@ stages:
         - task: KubeflowExperimentRun@0
           inputs:
             kubeflowEndpoint: '$(KF_ENDPOINT)'
-            bearerToken: '$(KF_API_TOKEN)'
+            bearerToken: '$(API_TOKEN)'
             pipeline: '$(KF_EXISTING_PIPELINE_NAME)'
             useDefaultVersion: $(KF_USE_DEFAULT_VERSION)
             pipelineVersion: '$(KF_NEW_VERSION_NAME)'
