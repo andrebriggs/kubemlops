@@ -79,8 +79,8 @@ def main():
     )
 
     args = parser.parse_args()    
-    client = kfp.Client(host=args.kfp_host, existing_token=token)
     token = get_access_token(args.tenant, args.service_principal, args.sp_secret)  # noqa: E501
+    client = kfp.Client(host=args.kfp_host, existing_token=token)    
     exp = client.get_experiment(experiment_name=args.experiment_name)  # noqa: E501
 
     pipeline_params = {}
