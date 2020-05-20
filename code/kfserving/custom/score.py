@@ -69,33 +69,5 @@ def process_image(path, image_size):
     return img_final
 
 
-def info(msg, char="#", width=75):
-    print("")
-    print(char * width)
-    print(char + "   %0*s" % ((-1 * width) + 5, msg) + char)
-    print(char * width)
-
-
 if __name__ == "__main__":
     application.run(host='0.0.0.0')
-
-# if __name__ == "__main__":
-#     images = {
-#         'tacos': 'https://c1.staticflickr.com/5/4022/4401140214_f489c708f0_b.jpg',  # noqa: E501
-#         'burrito': 'https://www.exploreveg.org/files/2015/05/sofritas-burrito.jpeg'  # noqa: E501
-#     }
-
-#     init()
-
-#     for k, v in images.items():
-#         print('{} => {}'.format(k, v))
-
-#     info('Taco Test')
-#     taco = json.dumps({'image': images['tacos']})
-#     print(taco)
-#     run(taco)
-
-#     info('Burrito Test')
-#     burrito = json.dumps({'image': images['burrito']})
-#     print(burrito)
-#     run(burrito)
