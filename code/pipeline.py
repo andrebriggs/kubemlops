@@ -136,7 +136,7 @@ def tacosandburritos_train(
 
         #  train
         #  TODO: read set of parameters from config file
-        with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:  # noqa: E501
+        # with dsl.ParallelFor([{'epochs': 1, 'lr': 0.0001}, {'epochs': 2, 'lr': 0.0002}, {'epochs': 3, 'lr': 0.0003}]) as item:  # noqa: E501
             operations['training'] = dsl.ContainerOp(
                 name="training",
                 image=image_repo_name + '/training:latest',
@@ -145,10 +145,10 @@ def tacosandburritos_train(
                     '/scripts/train.py',
                     '--base_path', persistent_volume_path,
                     '--data', training_folder,
-                    '--epochs', item.epochs,
+                    '--epochs', 4,
                     '--batch', batch,
                     '--image_size', image_size,
-                    '--lr', item.lr,
+                    '--lr', 0.0001,
                     '--outputs', model_folder,
                     '--dataset', training_dataset
                 ],
