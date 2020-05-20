@@ -55,6 +55,8 @@ def load_dataset(base_path, dset, split=None):
     with open(dset, 'r') as d:
         data = [(str(Path(line.strip()).absolute()),
                  labels[Path(line.strip()).parent.name]) for line in d.readlines()]  # noqa: E501
+        print(str(Path(line.strip()).absolute()))
+        print(labels[Path(line.strip()).parent.name])
 
     print('dataset size: {}\nsuffling data...'.format(len(data)))
 
