@@ -124,7 +124,7 @@ stages:
         - task: KubeflowExperimentRun@0
           inputs:
             kubeflowEndpoint: '$(KF_ENDPOINT)'
-            bearerToken: '$(API_TOKEN)'
+            bearerToken: '$(KF_API_TOKEN)'
             pipeline: '$(KF_NEW_PIPELINE_NAME)'
             useDefaultVersion: '$(KF_USE_DEFAULT_VERSION)'
             pipelineVersion: '$(KF_NEW_PIPELINE_NAME)'
@@ -140,7 +140,7 @@ stages:
         - task: KubeflowExperimentRun@0
           inputs:
             kubeflowEndpoint: '$(KF_ENDPOINT)'
-            bearerToken: '$(API_TOKEN)'
+            bearerToken: '$(KF_API_TOKEN)'
             pipeline: '$(KF_EXISTING_PIPELINE_NAME)'
             useDefaultVersion: $(KF_USE_DEFAULT_VERSION)
             pipelineVersion: '$(KF_NEW_VERSION_NAME)'
