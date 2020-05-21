@@ -23,7 +23,7 @@ def load_model():
 
    
 
-@application.route("/", methods=['GET', 'POST'])
+@application.route("/v1/models/custom:predict", methods=['GET', 'POST'])
 def run():
     if (request.method == 'GET'):
         return "Healthy"
